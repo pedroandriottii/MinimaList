@@ -17,6 +17,16 @@ class ViewController: UIViewController {
         return table
     }()
     
+    private var addBtn: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(systemName: "plus"), for: .normal)
+        button.layer.cornerRadius = 25
+        button.tintColor = .white
+        button.backgroundColor = .black
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     private var clients: [Client] = []
 
     override func viewDidLoad() {
@@ -24,7 +34,10 @@ class ViewController: UIViewController {
         view.backgroundColor = .white
         
         view.addSubview(table)
+        view.addSubview(addBtn)
         setConstraints()
+        
+        addBtn.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
         
         fetchData()
     }
@@ -34,13 +47,19 @@ class ViewController: UIViewController {
             table.topAnchor.constraint(equalTo: view.topAnchor, constant: 26),
             table.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             table.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            table.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            table.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            addBtn.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16),
+            addBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            addBtn.widthAnchor.constraint(equalToConstant: 50),
+            addBtn.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
     
+    // Carregando clientes da API
     func fetchData() {
         let service = Service()
-        service.get() { result in
+        service.getAllClients() { result in
             DispatchQueue.main.async {
                 switch result {
                 case let .failure(error):
@@ -52,18 +71,27 @@ class ViewController: UIViewController {
             }
         }
     }
+    
+    @objc func addButtonTapped(){
+        let createClientVC = CreateClientViewController()
+        createClientVC.delegate = self
+        navigationController?.pushViewController(createClientVC, animated: true)
+    }
 }
 
 extension ViewController: UITableViewDataSource {
     
+    // Numero de Secoes
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
+    // Tamanho da Tabela
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return clients.count
     }
     
+    // Definindo dado das Celulas
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: "UITableViewCell")
         let client = clients[indexPath.row]
@@ -80,5 +108,14 @@ extension ViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return "Clientes"
+    }
+    
+}
+
+// Atualizando a table apos criar o cliente
+extension ViewController: CreateClientDelegate {
+    func didCreateClient() {
+        fetchData()
+        table.reloadData()
     }
 }

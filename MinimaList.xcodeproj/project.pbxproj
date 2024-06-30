@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3002E2352C30EBF900190B17 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3002E2342C30EBF900190B17 /* Service.swift */; };
+		3002E2372C31185200190B17 /* CreateClientViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3002E2362C31185200190B17 /* CreateClientViewController.swift */; };
 		30149C492C30B690002D637D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30149C482C30B690002D637D /* AppDelegate.swift */; };
 		30149C4B2C30B690002D637D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30149C4A2C30B690002D637D /* SceneDelegate.swift */; };
 		30149C4D2C30B690002D637D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30149C4C2C30B690002D637D /* ViewController.swift */; };
@@ -17,6 +18,7 @@
 
 /* Begin PBXFileReference section */
 		3002E2342C30EBF900190B17 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
+		3002E2362C31185200190B17 /* CreateClientViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateClientViewController.swift; sourceTree = "<group>"; };
 		30149C452C30B690002D637D /* MinimaList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MinimaList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		30149C482C30B690002D637D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		30149C4A2C30B690002D637D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -41,6 +43,7 @@
 			isa = PBXGroup;
 			children = (
 				30149C4C2C30B690002D637D /* ViewController.swift */,
+				3002E2362C31185200190B17 /* CreateClientViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -157,6 +160,7 @@
 				3002E2352C30EBF900190B17 /* Service.swift in Sources */,
 				30149C492C30B690002D637D /* AppDelegate.swift in Sources */,
 				30149C4B2C30B690002D637D /* SceneDelegate.swift in Sources */,
+				3002E2372C31185200190B17 /* CreateClientViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
