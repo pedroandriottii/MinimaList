@@ -13,6 +13,8 @@ protocol CreateClientDelegate: AnyObject {
 
 class CreateClientViewController: UIViewController {
     
+    let service = Service()
+    
     weak var delegate: CreateClientDelegate?
     
     private var nameTextField: UITextField = {
@@ -108,6 +110,7 @@ class CreateClientViewController: UIViewController {
     }
     
     @objc func createClient() {
+        
         guard let name = nameTextField.text, !name.isEmpty,
               let street = streetTextField.text, !street.isEmpty,
               let number = numberTextField.text, !number.isEmpty,
@@ -117,17 +120,11 @@ class CreateClientViewController: UIViewController {
         
         let client = Client(id: nil, name: name, street: street, number: number, neighborhood: neighborhood, complement: complementTextField.text)
         
-        let service = Service()
-        service.createClient(client: client) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success:
-                    self.delegate?.didCreateClient()
-                    self.navigationController?.popViewController(animated: true)
-                case let .failure(error):
-                    print("Error: \(error)")
-                }
-            }
+        service.create(client: client) { success, error in
+            if success {
+                self.delegate?.didCreateClient()
+                self.navigationController?.popViewController(animated: true)
+            } else { return }
         }
     }
 }

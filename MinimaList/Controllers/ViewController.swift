@@ -9,6 +9,8 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    let service = Service()
+    
     private lazy var table: UITableView = {
         let table = UITableView(frame: .zero, style: .plain)
         table.delegate = self
@@ -58,17 +60,13 @@ class ViewController: UIViewController {
     
     // Carregando clientes da API
     func fetchData() {
-        let service = Service()
-        service.getAllClients() { result in
-            DispatchQueue.main.async {
-                switch result {
-                case let .failure(error):
-                    print("Error: \(error)")
-                case let .success(clients):
-                    self.clients = clients
+        service.getAllClients { result, error in
+            if let client = result {
+                DispatchQueue.main.async {
+                    self.clients = client
                     self.table.reloadData()
                 }
-            }
+            } else { return }
         }
     }
     
@@ -103,13 +101,16 @@ extension ViewController: UITableViewDataSource {
 extension ViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+        let client = clients[indexPath.row]
+        let detailVC = ClientDetailsViewController()
+        detailVC.client = client
+        navigationController?.pushViewController(detailVC, animated: true)
+        table.deselectRow(at: indexPath, animated: true)
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return "Clientes"
     }
-    
 }
 
 // Atualizando a table apos criar o cliente

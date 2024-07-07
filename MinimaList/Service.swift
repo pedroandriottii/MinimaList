@@ -27,68 +27,25 @@ class Service {
     
     private let baseURL = "https://reasonable-amazement-production.up.railway.app"
     
-    func getAllClients(callback: @escaping (Result<[Client], Error>) -> Void) {
-        let path = "/clients"
-        guard let url = URL(string: baseURL + path) else {
-            callback(.failure(ServiceError.invalidURL))
-            return
-        }
-        
-        let task = URLSession.shared.dataTask(with: url) { data, response, error in
-            if let error = error {
-                callback(.failure(ServiceError.network(error)))
-                return
-            }
-            
-            guard let data = data else {
-                callback(.failure(ServiceError.network(nil)))
-                return
-            }
-            
-            do {
-                let clients = try JSONDecoder().decode([Client].self, from: data)
-                callback(.success(clients))
-            } catch {
-                callback(.failure(ServiceError.decoding(error)))
+    func getAllClients(_ completion: @escaping(_ result: [Client]?, _ error: APIResponseError?) -> Void) {
+        APIHelper.request(method: .get, endpoint: "/clients", parameters: [:], responseType: [Client].self) { response, error, code in
+            if code == 200 {
+                completion(response, nil)
+            } else {
+                completion(nil, error)
             }
         }
-        
-        task.resume()
     }
     
-    func createClient(client: Client, callback: @escaping (Result<Void, Error>) -> Void) {
-        let path = "/clients"
-        guard let url = URL(string: baseURL + path) else {
-            callback(.failure(ServiceError.invalidURL))
-            return
-        }
+    func create(client: Client, _ completion: @escaping(_ success: Bool,_ error: APIResponseError?) -> Void){
         
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        do {
-            let jsonData = try JSONEncoder().encode(client)
-            request.httpBody = jsonData
-        } catch {
-            callback(.failure(ServiceError.encoding(error)))
-            return
-        }
-        
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
-                callback(.failure(ServiceError.network(error)))
-                return
+        APIHelper.request(method: .post, endpoint: "/clients", parameters: ["client": client], responseType: Bool.self) { response,error,code in
+            if code == 201 {
+                completion(true, nil)
+            } else{
+                completion(false, error)
             }
-            
-            guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 201 else {
-                callback(.failure(ServiceError.network(nil)))
-                return
-            }
-            
-            callback(.success(()))
         }
-        
-        task.resume()
     }
+
 }
